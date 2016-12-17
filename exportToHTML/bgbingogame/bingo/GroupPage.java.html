@@ -1,0 +1,220 @@
+<html>
+<head>
+<title>GroupPage.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(0,128,0); font-weight: bold; }
+.s3 { color: rgb(0,0,255); }
+.s4 { color: rgb(128,128,128); font-style: italic; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+GroupPage.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">bgbingogame.bingo; 
+ 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AlertDialog; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.widget.Button; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextClock; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextView; 
+</span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+ 
+</span><span class="s0">import </span><span class="s1">com.android.volley.RequestQueue; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Response; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.Volley; 
+ 
+</span><span class="s0">import </span><span class="s1">org.json.JSONException; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONObject; 
+ 
+</span><span class="s0">import </span><span class="s1">java.net.Inet4Address; 
+</span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+</span><span class="s0">import </span><span class="s1">java.util.Arrays; 
+</span><span class="s0">import </span><span class="s1">java.util.Collections; 
+</span><span class="s0">import </span><span class="s1">java.util.List; 
+ 
+</span><span class="s0">public class </span><span class="s1">GroupPage </span><span class="s0">extends </span><span class="s1">AppCompatActivity { 
+ 
+    @Override 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_group_page); 
+        Intent intent2 = getIntent(); 
+        </span><span class="s0">final </span><span class="s1">String username1=intent2.getStringExtra(</span><span class="s2">&quot;username&quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String group_name1 = intent2.getStringExtra(</span><span class="s2">&quot;group_name&quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String[] New_Game = </span><span class="s0">new </span><span class="s1">String[</span><span class="s3">1</span><span class="s1">]; 
+        </span><span class="s4">//final ArrayList&lt;String&gt; User_Winner=new ArrayList&lt;String&gt;();</span><span class="s1"> 
+        </span><span class="s0">final </span><span class="s1">Integer[] User_Winner = {</span><span class="s3">0</span><span class="s1">}; 
+                </span><span class="s4">// String message = &quot;Hello &quot;+username+&quot;, welcome to BGBingo Game.&quot;+&quot;\n&quot;+&quot;You are in group: &quot;+group_name+&quot;.&quot;;</span><span class="s1"> 
+        </span><span class="s4">//welcome_message.setText(message);*/</span><span class="s1"> 
+ 
+        Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                </span><span class="s0">try </span><span class="s1">{ 
+                    JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                    </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s2">&quot;success&quot;</span><span class="s1">); 
+                    TextView winner_stat=(TextView) findViewById(R.id.group_winner); 
+                    TextView Game_number=(TextView) findViewById(R.id.group_stat); 
+                    TextView Test=(TextView)findViewById(R.id.individual_stats); 
+ 
+                    </span><span class="s0">if </span><span class="s1">(success){ 
+                        String message = </span><span class="s0">null</span><span class="s1">; 
+                        ArrayList&lt;String&gt; game = </span><span class="s0">new </span><span class="s1">ArrayList&lt;String&gt;(); 
+                        ArrayList&lt;Integer&gt; game_2=</span><span class="s0">new </span><span class="s1">ArrayList&lt;Integer&gt;(); 
+                        ArrayList&lt;String&gt; winner = </span><span class="s0">new </span><span class="s1">ArrayList&lt;String&gt;(); 
+ 
+                        String results=jsonResponse.getString(</span><span class="s2">&quot;results&quot;</span><span class="s1">); 
+                        String[] q_results=results.split(</span><span class="s2">&quot;,|</span><span class="s0">\\</span><span class="s2">|&quot;</span><span class="s1">); 
+ 
+                        </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">0</span><span class="s1">; i&lt;q_results.length; i+=</span><span class="s3">2</span><span class="s1">){ 
+                                game.add(</span><span class="s2">&quot; &quot;</span><span class="s1">+q_results[i]); 
+                        } 
+                        String games= </span><span class="s2">&quot;Played Games</span><span class="s0">\n</span><span class="s2">&quot;</span><span class="s1">+game.toString(); 
+                        String game1=games.replace(</span><span class="s2">&quot;[&quot;</span><span class="s1">,</span><span class="s2">&quot;&quot;</span><span class="s1">); 
+                        String game2=game1.replace(</span><span class="s2">&quot;]&quot;</span><span class="s1">,</span><span class="s2">&quot;&quot;</span><span class="s1">); 
+                        String game3=game2.replace(</span><span class="s2">&quot; , &quot;</span><span class="s1">,</span><span class="s2">&quot;</span><span class="s0">\n</span><span class="s2">&quot;</span><span class="s1">); 
+ 
+                        Game_number.setText(game3); 
+ 
+                        </span><span class="s4">/*Each Game played gets assigned a game number 
+                        * This function gathers the game numbers from the database 
+                        * Calculates the Maximum number 
+                        * Now if the player plays a new game the game will be assigned 
+                        * a Game Number 1+ than the previous game number*/</span><span class="s1"> 
+ 
+                        </span><span class="s0">for </span><span class="s1">(String element:game) { 
+                            game_2.add(Integer.parseInt(element.replace(</span><span class="s2">&quot; &quot;</span><span class="s1">,</span><span class="s2">&quot;&quot;</span><span class="s1">))); 
+                        } 
+                        Integer Max_Group= Collections.max(game_2); 
+                        Integer new_games=Max_Group+</span><span class="s3">1</span><span class="s1">; 
+                        New_Game[</span><span class="s3">0</span><span class="s1">] = new_games.toString(); 
+ 
+ 
+                            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">0</span><span class="s1">; i&lt;q_results.length; i+=</span><span class="s3">3</span><span class="s1">){ 
+                                </span><span class="s0">if </span><span class="s1">(i==</span><span class="s3">0</span><span class="s1">){ 
+                                    winner.add(</span><span class="s3">0</span><span class="s1">,</span><span class="s2">&quot; &quot;</span><span class="s1">+q_results[</span><span class="s3">0</span><span class="s1">]); 
+                                } 
+                                </span><span class="s0">else</span><span class="s1">{ 
+                                    winner.add(i-</span><span class="s3">2</span><span class="s1">,</span><span class="s2">&quot; &quot;</span><span class="s1">+q_results[i]); 
+                                } 
+ 
+ 
+                            } 
+ 
+                        String wins= </span><span class="s2">&quot;Winners</span><span class="s0">\n</span><span class="s2">&quot;</span><span class="s1">+winner.toString(); 
+                        String win1=wins.replace(</span><span class="s2">&quot;[&quot;</span><span class="s1">,</span><span class="s2">&quot;&quot;</span><span class="s1">); 
+                        String win2=win1.replace(</span><span class="s2">&quot;]&quot;</span><span class="s1">,</span><span class="s2">&quot;&quot;</span><span class="s1">); 
+                        String win3=win2.replace(</span><span class="s2">&quot; , &quot;</span><span class="s1">,</span><span class="s2">&quot;</span><span class="s0">\n</span><span class="s2">&quot;</span><span class="s1">); 
+                        winner_stat.setText(win3); 
+                         
+                    }</span><span class="s4">//close if statement</span><span class="s1"> 
+                    </span><span class="s0">else</span><span class="s1">{ 
+                        AlertDialog.Builder builder = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder(GroupPage.</span><span class="s0">this</span><span class="s1">); 
+                        builder.setMessage(</span><span class="s2">&quot;Retrieval Failed&quot;</span><span class="s1">) 
+                                .setNegativeButton(</span><span class="s2">&quot;Retry&quot;</span><span class="s1">, </span><span class="s0">null</span><span class="s1">) 
+                                .create() 
+                                .show(); 
+                    }</span><span class="s4">//close else statement</span><span class="s1"> 
+                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                    e.printStackTrace(); 
+                } 
+            } 
+        }; 
+        GameStatistics gamestats= </span><span class="s0">new </span><span class="s1">GameStatistics(group_name1,response_listener); 
+        RequestQueue queue = Volley.newRequestQueue(GroupPage.</span><span class="s0">this</span><span class="s1">); 
+        queue.add(gamestats); 
+ 
+ 
+ 
+ 
+    </span><span class="s0">final </span><span class="s1">Button new_game_button=(Button) findViewById(R.id.new_game_button); 
+        new_game_button.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+                String Game=New_Game[</span><span class="s3">0</span><span class="s1">].toString(); 
+               </span><span class="s4">/* Toast.makeText( 
+                        GroupPage.this, 
+                        Game, 
+                        Toast.LENGTH_LONG 
+                ).show();*/</span><span class="s1"> 
+                Intent intent=</span><span class="s0">new </span><span class="s1">Intent(GroupPage.</span><span class="s0">this</span><span class="s1">,Bingo_Main_Game.</span><span class="s0">class</span><span class="s1">); 
+                intent.putExtra(</span><span class="s2">&quot;username1&quot;</span><span class="s1">,username1); 
+                intent.putExtra(</span><span class="s2">&quot;group_name1&quot;</span><span class="s1">,group_name1); 
+                intent.putExtra(</span><span class="s2">&quot;Game&quot;</span><span class="s1">, Game); 
+ 
+                GroupPage.</span><span class="s0">this</span><span class="s1">.startActivity(intent); 
+ 
+            } 
+ 
+        }); 
+        </span><span class="s0">final </span><span class="s1">TextView logout_button=(TextView) findViewById(R.id.cloud_logout); 
+        logout_button.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+                Intent intent=</span><span class="s0">new </span><span class="s1">Intent(GroupPage.</span><span class="s0">this</span><span class="s1">,Bingo_Main_Login.</span><span class="s0">class</span><span class="s1">); 
+                GroupPage.</span><span class="s0">this</span><span class="s1">.startActivity(intent); 
+                Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+                    @Override 
+                    </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                        </span><span class="s0">try </span><span class="s1">{ 
+                            JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                            </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s2">&quot;success&quot;</span><span class="s1">); 
+ 
+                            </span><span class="s0">if </span><span class="s1">(success){ 
+ 
+                                Intent intent=</span><span class="s0">new </span><span class="s1">Intent(GroupPage.</span><span class="s0">this</span><span class="s1">,Bingo_Main_Login.</span><span class="s0">class</span><span class="s1">); 
+                                intent.putExtra(</span><span class="s2">&quot;username&quot;</span><span class="s1">,username1); 
+                                intent.putExtra(</span><span class="s2">&quot;group_name&quot;</span><span class="s1">,group_name1); 
+ 
+                                GroupPage.</span><span class="s0">this</span><span class="s1">.startActivity(intent); 
+                            }</span><span class="s4">//close if statement</span><span class="s1"> 
+                            </span><span class="s0">else</span><span class="s1">{ 
+                                AlertDialog.Builder builder = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder(GroupPage.</span><span class="s0">this</span><span class="s1">); 
+                                builder.setMessage(</span><span class="s2">&quot;Logout Failed&quot;</span><span class="s1">) 
+                                        .setNegativeButton(</span><span class="s2">&quot;Retry&quot;</span><span class="s1">, </span><span class="s0">null</span><span class="s1">) 
+                                        .create() 
+                                        .show(); 
+                            }</span><span class="s4">//close else statement</span><span class="s1"> 
+                        } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                            e.printStackTrace(); 
+                        } 
+                    } 
+                }; 
+                LogOut logout= </span><span class="s0">new </span><span class="s1">LogOut(username1,group_name1,response_listener); 
+                RequestQueue queue = Volley.newRequestQueue(GroupPage.</span><span class="s0">this</span><span class="s1">); 
+                queue.add(logout); 
+            } 
+ 
+        }); 
+        GroupStats(); 
+    } 
+    </span><span class="s0">public void </span><span class="s1">GroupStats(){ 
+        Intent intent2 = getIntent(); 
+        </span><span class="s0">final </span><span class="s1">String username1=intent2.getStringExtra(</span><span class="s2">&quot;username&quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String group_name1 = intent2.getStringExtra(</span><span class="s2">&quot;group_name&quot;</span><span class="s1">); 
+        TextView background1=(TextView)findViewById(R.id.group_stat_background); 
+        String text=</span><span class="s2">&quot;GROUP: &quot;</span><span class="s1">+group_name1.toUpperCase()+</span><span class="s2">&quot; STATISTICS&quot;</span><span class="s1">; 
+        background1.setText(text); 
+ 
+        TextView background2=(TextView)findViewById(R.id.individual_stat_background); 
+        String text2=</span><span class="s2">&quot;Player: &quot;</span><span class="s1">+username1.toUpperCase()+</span><span class="s2">&quot; STATISTICS&quot;</span><span class="s1">; 
+        background2.setText(text2); 
+ 
+ 
+    } 
+ 
+} 
+</span></pre>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="#e6f3ff"
+    android:padding="8dp"
+    tools:context="bgbingogame.bingo.Bingo_Main_Login">
+
+    <ImageView
+        android:id="@+id/cloud_40"
+        android:src="@drawable/cloud_blue"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        />
+
+
+    <ImageView
+        android:src="@drawable/cloud_blue3"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/cloud_41"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="120dp"
+        />
+    <ImageView
+        android:src="@drawable/cloud_blue3"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/cloud_42"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="420dp"
+        />
+    <ImageView
+        android:src="@drawable/cloud_blue3"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/cloud_43"
+        android:layout_marginLeft="290dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="100dp"
+        />
+    <ImageView
+        android:id="@+id/cloud_44"
+        android:src="@drawable/cloud_blue"
+        android:layout_width="115dp"
+        android:layout_height="115dp"
+        android:layout_marginLeft="185dp"
+        android:layout_marginTop="365dp"
+        />
+    <ImageView
+        android:src="@drawable/cloud_blue8"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/cloud_45"
+        android:layout_marginLeft="290dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="480dp"
+        />
+    <ImageView
+        android:src="@drawable/cloud_blue9"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/cloud_46"
+        android:layout_marginLeft="-50dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="500dp"
+        />
+    <ImageView
+        android:id="@+id/cloud_47"
+        android:src="@drawable/cloud_blue6"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginLeft="270dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginTop="175dp"
+        />
+
+    <ImageView
+        android:src="@drawable/cloud_blue3"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:id="@+id/cloud_48"
+        android:layout_marginLeft="225dp"
+        android:layout_marginTop="290dp"
+        />
+
+    <ImageView
+        android:id="@+id/cloud_29"
+        android:src="@drawable/cloud_blue5"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginTop="155dp"
+        />
+
+    <ImageView
+        android:id="@+id/cloud_50"
+        android:src="@drawable/cloud_blue7"
+        android:layout_width="100dp"
+        android:layout_height="125dp"
+        android:gravity="center"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="35dp"
+        />
+
+
+    <ImageView
+        android:src="@drawable/cloud_blue2"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:id="@+id/cloud_51"
+        android:gravity="center"
+        android:layout_marginLeft="75dp"
+        android:layout_marginTop="295dp"
+        />
+
+
+    <ImageView
+        android:id="@+id/cloud_52"
+        android:src="@drawable/cloud_blue7"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="150dp"
+        android:layout_marginTop="225dp"
+        />
+    <ImageView
+        android:id="@+id/cloud_53"
+        android:src="@drawable/cloud_blue6"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_marginStart="-50dp"
+        android:layout_marginTop="225dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/welcome_message"
+        android:text="Welcome to Bingo"
+        android:textStyle="bold"
+        android:textSize="60sp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"
+        />
+
+    <EditText
+        android:id="@+id/etUsername"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="35dp"
+        android:hint="Username"
+        android:textColorHint="@color/bright_blue"
+        android:layout_marginTop="150dp"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_board"/>
+
+    <EditText
+        android:id="@+id/etGroupName"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="35dp"
+        android:hint="Group Name"
+        android:textColorHint="@color/bright_blue"
+        android:layout_marginTop="225dp"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_board"/>
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:paddingLeft="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_marginBottom="10dp"
+        android:inputType="textPassword"
+        android:hint="Password"
+        android:textColorHint="@color/bright_blue"
+        android:layout_marginTop="300dp"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_board"/>
+
+    <Button
+        android:id="@+id/login_button"
+        android:text="Login"
+        android:layout_marginBottom="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="400dp"
+        android:textColor="@color/colorPrimary"
+        android:background="@drawable/button_board"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/registerlink"
+        android:text="Register Here"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:textStyle="bold"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/bright_blue"
+        android:background="@drawable/cloud_blue6"
+        android:layout_marginStart="115dp"
+        android:layout_marginTop="465dp"
+        />
+
+</RelativeLayout>

@@ -1,0 +1,314 @@
+<html>
+<head>
+<title>Bingo_Main_Login.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,128,0); font-weight: bold; }
+.s4 { color: rgb(0,0,255); }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+Bingo_Main_Login.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">bgbingogame.bingo; 
+ 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.os.Handler; 
+</span><span class="s0">import </span><span class="s1">android.os.Message; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AlertDialog; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AppCompatActivity; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.view.ViewGroup; 
+</span><span class="s0">import </span><span class="s1">android.widget.Button; 
+</span><span class="s0">import </span><span class="s1">android.widget.EditText; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextView; 
+ 
+</span><span class="s0">import </span><span class="s1">com.android.volley.RequestQueue; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Response; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.Volley; 
+ 
+</span><span class="s0">import </span><span class="s1">org.json.JSONException; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONObject; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.Timer; 
+</span><span class="s0">import </span><span class="s1">java.util.TimerTask; 
+ 
+</span><span class="s0">public class </span><span class="s1">Bingo_Main_Login </span><span class="s0">extends </span><span class="s1">AppCompatActivity { 
+    Handler handler6=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+            View cloud6 = findViewById(R.id.cloud_40); 
+            ViewGroup.MarginLayoutParams mlp6 = (ViewGroup.MarginLayoutParams) cloud6.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top = mlp6.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom = mlp6.bottomMargin; 
+            mlp6.setMargins(newLeft6, top, newRight6, bottom);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud6.setLayoutParams(mlp6); 
+        } 
+    }; 
+    Handler handler2=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+ 
+            View cloud2=findViewById(R.id.cloud_41); 
+            ViewGroup.MarginLayoutParams mlp2 = (ViewGroup.MarginLayoutParams) cloud2.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top2=mlp2.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom2=mlp2.bottomMargin; 
+            mlp2.setMargins(newLeft2, top2, newRight2, bottom2);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud2.setLayoutParams(mlp2); 
+        } 
+    }; 
+    Handler handler1=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+ 
+            View cloud1=findViewById(R.id.cloud_42); 
+            ViewGroup.MarginLayoutParams mlp1 = (ViewGroup.MarginLayoutParams) cloud1.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top1=mlp1.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom1=mlp1.bottomMargin; 
+            mlp1.setMargins(newLeft1, top1, newRight1, bottom1);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud1.setLayoutParams(mlp1); 
+        } 
+    }; 
+    Handler handler3=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+ 
+            View cloud3=findViewById(R.id.cloud_43); 
+            ViewGroup.MarginLayoutParams mlp3 = (ViewGroup.MarginLayoutParams) cloud3.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top3=mlp3.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom3=mlp3.bottomMargin; 
+            mlp3.setMargins(newLeft3, top3, newRight3, bottom3);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud3.setLayoutParams(mlp3); 
+        } 
+    }; 
+    Handler handler4=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+            View cloud4=findViewById(R.id.cloud_44); 
+            ViewGroup.MarginLayoutParams mlp4 = (ViewGroup.MarginLayoutParams) cloud4.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top4=mlp4.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom4=mlp4.bottomMargin; 
+            mlp4.setMargins(newLeft4, top4, newRight4, bottom4);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud4.setLayoutParams(mlp4); 
+        } 
+    }; 
+    Handler handler11=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+            View cloud11=findViewById(R.id.cloud_45); 
+            ViewGroup.MarginLayoutParams mlp11 = (ViewGroup.MarginLayoutParams) cloud11.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top11=mlp11.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom11=mlp11.bottomMargin; 
+            mlp11.setMargins(newLeft11, top11, newRight11, bottom11);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud11.setLayoutParams(mlp11); 
+        } 
+    }; 
+ 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+        setContentView(R.layout.activity_login); 
+ 
+        </span><span class="s0">final </span><span class="s1">EditText etUsername=(EditText) findViewById(R.id.etUsername); 
+        </span><span class="s0">final </span><span class="s1">EditText etPassword=(EditText) findViewById(R.id.etPassword); 
+        </span><span class="s0">final </span><span class="s1">EditText etGroupName=(EditText) findViewById(R.id.etGroupName); 
+        </span><span class="s0">final </span><span class="s1">Button login_button=(Button) findViewById(R.id.login_button); 
+        </span><span class="s0">final </span><span class="s1">TextView register_link=(TextView) findViewById(R.id.registerlink); 
+        Clouds3(); 
+        </span><span class="s2">//when register here is clicked</span><span class="s1"> 
+        register_link.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+                Intent registerIntent=</span><span class="s0">new </span><span class="s1">Intent(Bingo_Main_Login.</span><span class="s0">this</span><span class="s1">,Register.</span><span class="s0">class</span><span class="s1">); 
+                Bingo_Main_Login.</span><span class="s0">this</span><span class="s1">.startActivity(registerIntent); 
+            } 
+        }); 
+        </span><span class="s2">//when user clicks login</span><span class="s1"> 
+        login_button.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){ 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+                </span><span class="s0">final </span><span class="s1">String group_name = etGroupName.getText().toString(); 
+                </span><span class="s0">final </span><span class="s1">String username = etUsername.getText().toString(); 
+                </span><span class="s0">final </span><span class="s1">String password = etPassword.getText().toString(); 
+ 
+                Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+                    @Override 
+                    </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                        </span><span class="s0">try </span><span class="s1">{ 
+                            JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                            </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s3">&quot;success&quot;</span><span class="s1">); 
+ 
+                            </span><span class="s0">if </span><span class="s1">(success){ 
+                                String username=jsonResponse.getString(</span><span class="s3">&quot;username&quot;</span><span class="s1">); 
+                                String group_name= jsonResponse.getString(</span><span class="s3">&quot;group_name&quot;</span><span class="s1">); 
+ 
+                                Intent intent=</span><span class="s0">new </span><span class="s1">Intent(Bingo_Main_Login.</span><span class="s0">this</span><span class="s1">,GroupPage.</span><span class="s0">class</span><span class="s1">); 
+                                intent.putExtra(</span><span class="s3">&quot;username&quot;</span><span class="s1">,username); 
+                                intent.putExtra(</span><span class="s3">&quot;group_name&quot;</span><span class="s1">,group_name); 
+ 
+                                Bingo_Main_Login.</span><span class="s0">this</span><span class="s1">.startActivity(intent); 
+                            }</span><span class="s2">//close if statement</span><span class="s1"> 
+                            </span><span class="s0">else</span><span class="s1">{ 
+                                AlertDialog.Builder builder = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder(Bingo_Main_Login.</span><span class="s0">this</span><span class="s1">); 
+                                builder.setMessage(</span><span class="s3">&quot;Login Failed&quot;</span><span class="s1">) 
+                                        .setNegativeButton(</span><span class="s3">&quot;Retry&quot;</span><span class="s1">, </span><span class="s0">null</span><span class="s1">) 
+                                        .create() 
+                                        .show(); 
+                            }</span><span class="s2">//close else statement</span><span class="s1"> 
+                        } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                            e.printStackTrace(); 
+                        } 
+                    } 
+                }; 
+ 
+                LoginRequest loginRequest= </span><span class="s0">new </span><span class="s1">LoginRequest(username,group_name,password,response_listener); 
+                RequestQueue queue = Volley.newRequestQueue(Bingo_Main_Login.</span><span class="s0">this</span><span class="s1">); 
+                queue.add(loginRequest); 
+            }</span><span class="s2">//close onclick</span><span class="s1"> 
+        }); 
+    }</span><span class="s2">//closes onCreate</span><span class="s1"> 
+ 
+    </span><span class="s0">int </span><span class="s1">newRight2,newRight1,newRight3,newRight6, newRight4,newRight11; 
+    </span><span class="s0">int </span><span class="s1">newLeft2,newLeft1,newLeft3,newLeft6, newLeft4,newLeft11; 
+    </span><span class="s0">public void </span><span class="s1">Clouds3(){ 
+        </span><span class="s0">int </span><span class="s1">delay = </span><span class="s4">0</span><span class="s1">; </span><span class="s2">// delay for half a second.</span><span class="s1"> 
+        </span><span class="s0">int </span><span class="s1">period1 = </span><span class="s4">40</span><span class="s1">; </span><span class="s2">// repeat every  sec.</span><span class="s1"> 
+        </span><span class="s0">final int </span><span class="s1">pix=</span><span class="s4">1</span><span class="s1">; 
+ 
+        Timer timer = </span><span class="s0">new </span><span class="s1">Timer(); 
+        timer.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+                View cloud6=findViewById(R.id.cloud_40); 
+ 
+                ViewGroup.MarginLayoutParams mlp6 = (ViewGroup.MarginLayoutParams) cloud6.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right6=mlp6.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left6=mlp6.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left6&gt;-</span><span class="s4">520</span><span class="s1">){ 
+                    newRight6=right6+pix; 
+                    newLeft6=left6-pix; 
+                    handler6.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_6=right6; 
+                    </span><span class="s0">int </span><span class="s1">left_6=(</span><span class="s0">int</span><span class="s1">)(</span><span class="s4">1350</span><span class="s1">); 
+                    newRight6=right_6-pix; 
+                    newLeft6=left_6+pix; 
+                    handler6.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                View cloud2=findViewById(R.id.cloud_41); 
+                ViewGroup.MarginLayoutParams mlp2 = (ViewGroup.MarginLayoutParams) cloud2.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right2 = mlp2.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left2 = mlp2.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left2&gt;-</span><span class="s4">520</span><span class="s1">) { 
+                    newRight2 = right2 + pix; 
+                    newLeft2 = left2 - pix; 
+                    handler2.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_2 = right2; 
+                    </span><span class="s0">int </span><span class="s1">left_2=(</span><span class="s0">int</span><span class="s1">)(</span><span class="s4">1350</span><span class="s1">); 
+                    newRight2 = right_2 - pix; 
+                    newLeft2 = left_2 + pix; 
+                    handler2.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+ 
+ 
+            } 
+        }, delay, period1); 
+ 
+        </span><span class="s0">int </span><span class="s1">period2 = </span><span class="s4">20</span><span class="s1">; </span><span class="s2">// repeat every  sec.</span><span class="s1"> 
+ 
+        Timer timer2 = </span><span class="s0">new </span><span class="s1">Timer(); 
+        timer2.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+                View cloud1=findViewById(R.id.cloud_42); 
+                ViewGroup.MarginLayoutParams mlp1 = (ViewGroup.MarginLayoutParams) cloud1.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right1=mlp1.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left1=mlp1.leftMargin; 
+                </span><span class="s0">if</span><span class="s1">(left1&gt;-</span><span class="s4">520</span><span class="s1">){ 
+                    newRight1=right1+pix; 
+                    newLeft1=left1-pix; 
+                    handler1.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_1 = right1; 
+                    </span><span class="s0">int </span><span class="s1">left_1 = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s4">1350</span><span class="s1">);; 
+                    newRight1 = right_1 - pix; 
+                    newLeft1 = left_1 + pix; 
+                    handler1.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                View cloud3=findViewById(R.id.cloud_43); 
+                ViewGroup.MarginLayoutParams mlp3 = (ViewGroup.MarginLayoutParams) cloud3.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right3=mlp3.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left3=mlp3.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left3&gt;-</span><span class="s4">520</span><span class="s1">){ 
+                    newRight3=right3+pix; 
+                    newLeft3=left3-pix; 
+                    handler3.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_3 = right3; 
+                    </span><span class="s0">int </span><span class="s1">left_3 = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s4">1350</span><span class="s1">);; 
+                    newRight3 = right_3 - pix; 
+                    newLeft3 = left_3 + pix; 
+                    handler3.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                View cloud4=findViewById(R.id.cloud_44); 
+                ViewGroup.MarginLayoutParams mlp4 = (ViewGroup.MarginLayoutParams) cloud4.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right4=mlp4.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left4=mlp4.leftMargin; 
+                </span><span class="s0">if</span><span class="s1">(left4&gt;-</span><span class="s4">520</span><span class="s1">){ 
+                    newRight4=right4+pix; 
+                    newLeft4=left4-pix; 
+                    handler4.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_4 = right4; 
+                    </span><span class="s0">int </span><span class="s1">left_4 = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s4">1350</span><span class="s1">);; 
+                    newRight4 = right_4 - pix; 
+                    newLeft4 = left_4 + pix; 
+                    handler4.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+ 
+                } 
+ 
+            } 
+        }, delay, period2); 
+        </span><span class="s0">int </span><span class="s1">period3 =</span><span class="s4">75</span><span class="s1">; 
+        Timer timer3 = </span><span class="s0">new </span><span class="s1">Timer(); 
+        timer3.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+                View cloud11=findViewById(R.id.cloud_45); 
+ 
+                ViewGroup.MarginLayoutParams mlp11 = (ViewGroup.MarginLayoutParams) cloud11.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right11=mlp11.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left11=mlp11.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left11&gt;-</span><span class="s4">520</span><span class="s1">){ 
+                    newRight11=right11+pix; 
+                    newLeft11=left11-pix; 
+                    handler11.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_11=right11; 
+                    </span><span class="s0">int </span><span class="s1">left_11=(</span><span class="s0">int</span><span class="s1">)(</span><span class="s4">1350</span><span class="s1">); 
+                    newRight11=right_11-pix; 
+                    newLeft11=left_11+pix; 
+                    handler11.sendEmptyMessage(</span><span class="s4">0</span><span class="s1">); 
+                } 
+ 
+            } 
+        },</span><span class="s4">10</span><span class="s1">, period3); 
+    }</span><span class="s2">//close Clouds</span><span class="s1"> 
+ 
+ 
+} 
+</span></pre>
+</body>
+</html>

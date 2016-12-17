@@ -1,0 +1,1012 @@
+<html>
+<head>
+<title>Bingo_Main_Game.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.ln { color: rgb(0,0,0); font-weight: normal; font-style: normal; }
+.s0 { color: rgb(0,0,128); font-weight: bold; }
+.s1 { color: rgb(0,0,0); }
+.s2 { color: rgb(128,128,128); font-style: italic; }
+.s3 { color: rgb(0,0,255); }
+.s4 { color: rgb(0,128,0); font-weight: bold; }
+</style>
+</head>
+<BODY BGCOLOR="#ffffff">
+<TABLE CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#C0C0C0" >
+<TR><TD><CENTER>
+<FONT FACE="Arial, Helvetica" COLOR="#000000">
+Bingo_Main_Game.java</FONT>
+</center></TD></TR></TABLE>
+<pre>
+<span class="s0">package </span><span class="s1">bgbingogame.bingo; 
+</span><span class="s0">import </span><span class="s1">android.app.Activity; 
+</span><span class="s0">import </span><span class="s1">android.content.Intent; 
+</span><span class="s0">import </span><span class="s1">android.graphics.Color; 
+</span><span class="s0">import </span><span class="s1">android.os.Handler; 
+</span><span class="s0">import </span><span class="s1">android.os.Message; 
+</span><span class="s0">import </span><span class="s1">android.os.Bundle; 
+</span><span class="s0">import </span><span class="s1">android.support.v7.app.AlertDialog; 
+</span><span class="s0">import </span><span class="s1">android.view.View; 
+</span><span class="s0">import </span><span class="s1">android.view.ViewGroup; 
+</span><span class="s0">import </span><span class="s1">android.view.WindowManager; 
+</span><span class="s0">import </span><span class="s1">android.widget.Button; 
+</span><span class="s0">import </span><span class="s1">android.widget.LinearLayout; 
+</span><span class="s0">import </span><span class="s1">android.widget.RelativeLayout; 
+</span><span class="s0">import </span><span class="s1">android.widget.TextView; 
+</span><span class="s0">import </span><span class="s1">android.widget.Toast; 
+ 
+</span><span class="s0">import </span><span class="s1">com.android.volley.RequestQueue; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.Response; 
+</span><span class="s0">import </span><span class="s1">com.android.volley.toolbox.Volley; 
+ 
+</span><span class="s0">import </span><span class="s1">org.json.JSONException; 
+</span><span class="s0">import </span><span class="s1">org.json.JSONObject; 
+ 
+</span><span class="s0">import </span><span class="s1">java.util.ArrayList; 
+</span><span class="s0">import </span><span class="s1">java.util.Arrays; 
+</span><span class="s0">import </span><span class="s1">java.util.Timer; 
+</span><span class="s0">import </span><span class="s1">java.util.TimerTask; 
+ 
+ 
+</span><span class="s0">public class </span><span class="s1">Bingo_Main_Game </span><span class="s0">extends </span><span class="s1">Activity { 
+ 
+    </span><span class="s2">//creates array which will store the bingo ball numbers</span><span class="s1"> 
+    </span><span class="s0">public static </span><span class="s1">ArrayList&lt;Integer&gt; Ball = </span><span class="s0">new </span><span class="s1">ArrayList&lt;Integer&gt;(); 
+    </span><span class="s0">public static </span><span class="s1">ArrayList&lt;String&gt; DatabaseBall=</span><span class="s0">new </span><span class="s1">ArrayList&lt;String&gt;(); 
+    </span><span class="s0">public </span><span class="s1">String[] random_ball_array=</span><span class="s0">new </span><span class="s1">String[</span><span class="s3">100</span><span class="s1">]; 
+    </span><span class="s2">//creates array which will store the bingo cards numbers</span><span class="s1"> 
+    </span><span class="s0">int</span><span class="s1">[] BingoCardArray = </span><span class="s0">new int</span><span class="s1">[</span><span class="s3">25</span><span class="s1">]; 
+ 
+    </span><span class="s0">final boolean</span><span class="s1">[] display_previous_number = {</span><span class="s0">false</span><span class="s1">}; 
+    </span><span class="s0">final </span><span class="s1">String [] Intended=</span><span class="s0">new </span><span class="s1">String[</span><span class="s3">4</span><span class="s1">]; 
+    </span><span class="s2">//chillin on main thread</span><span class="s1"> 
+    Handler handler_sun=</span><span class="s0">new </span><span class="s1">Handler(){ 
+        </span><span class="s0">public void </span><span class="s1">handleMessage(Message msg){ 
+            CurrentBall=DatabaseBall.get(index).toString(); 
+           </span><span class="s2">// BingoBall = New_Random_Bingo_Ball_Result;</span><span class="s1"> 
+            </span><span class="s0">final </span><span class="s1">TextView ball_button=(TextView)findViewById(R.id.sun_bingo_ball_txt); 
+            ball_button.setText(CurrentBall); 
+            Bingo_Main_Game.Ball.add(Integer.parseInt(CurrentBall)); 
+ 
+            String message=Bingo_Main_Game.Ball.toString(); 
+            String message1=message.replace(</span><span class="s4">&quot;[&quot;</span><span class="s1">,</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+            String message2=message1.replace(</span><span class="s4">&quot;]&quot;</span><span class="s1">,</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+            </span><span class="s2">//DISPLAYS PREVIOUS BALL NUMBERS ON SCREEN</span><span class="s1"> 
+            </span><span class="s0">final </span><span class="s1">TextView previous_numbers=(TextView) findViewById(R.id.bingo_numbers); 
+            previous_numbers.setText(message2); 
+ 
+ 
+        } 
+    }; 
+    Handler handler6=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+            View cloud6 = findViewById(R.id.cloud_6); 
+            ViewGroup.MarginLayoutParams mlp6 = (ViewGroup.MarginLayoutParams) cloud6.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top = mlp6.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom = mlp6.bottomMargin; 
+            mlp6.setMargins(newLeft6, top, newRight6, bottom);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud6.setLayoutParams(mlp6); 
+        } 
+    }; 
+    Handler handler2=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+ 
+            View cloud2=findViewById(R.id.cloud_2); 
+            ViewGroup.MarginLayoutParams mlp2 = (ViewGroup.MarginLayoutParams) cloud2.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top2=mlp2.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom2=mlp2.bottomMargin; 
+            mlp2.setMargins(newLeft2, top2, newRight2, bottom2);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud2.setLayoutParams(mlp2); 
+        } 
+    }; 
+    Handler handler1=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+ 
+            View cloud1=findViewById(R.id.cloud_1); 
+            ViewGroup.MarginLayoutParams mlp1 = (ViewGroup.MarginLayoutParams) cloud1.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top1=mlp1.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom1=mlp1.bottomMargin; 
+            mlp1.setMargins(newLeft1, top1, newRight1, bottom1);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud1.setLayoutParams(mlp1); 
+        } 
+    }; 
+    Handler handler3=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+ 
+            View cloud3=findViewById(R.id.cloud_3); 
+            ViewGroup.MarginLayoutParams mlp3 = (ViewGroup.MarginLayoutParams) cloud3.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top3=mlp3.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom3=mlp3.bottomMargin; 
+            mlp3.setMargins(newLeft3, top3, newRight3, bottom3);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud3.setLayoutParams(mlp3); 
+        } 
+    }; 
+    Handler handler4=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+            View cloud4=findViewById(R.id.cloud_4); 
+            ViewGroup.MarginLayoutParams mlp4 = (ViewGroup.MarginLayoutParams) cloud4.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top4=mlp4.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom4=mlp4.bottomMargin; 
+            mlp4.setMargins(newLeft4, top4, newRight4, bottom4);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud4.setLayoutParams(mlp4); 
+        } 
+    }; 
+    Handler handler11=</span><span class="s0">new </span><span class="s1">Handler() { 
+        </span><span class="s0">public void  </span><span class="s1">handleMessage(Message msg) { 
+            View cloud11=findViewById(R.id.cloud_11); 
+            ViewGroup.MarginLayoutParams mlp11 = (ViewGroup.MarginLayoutParams) cloud11.getLayoutParams(); 
+            </span><span class="s0">int </span><span class="s1">top11=mlp11.topMargin; 
+            </span><span class="s0">int </span><span class="s1">bottom11=mlp11.bottomMargin; 
+            mlp11.setMargins(newLeft11, top11, newRight11, bottom11);</span><span class="s2">//all in pixels</span><span class="s1"> 
+            cloud11.setLayoutParams(mlp11); 
+        } 
+    }; 
+ 
+    </span><span class="s0">protected void </span><span class="s1">onCreate(Bundle savedInstanceState) { 
+        </span><span class="s0">super</span><span class="s1">.onCreate(savedInstanceState); 
+ 
+        </span><span class="s2">//set full screen</span><span class="s1"> 
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN); 
+        setContentView(R.layout.activity_bingo__main); 
+ 
+        Intent intent3 = getIntent(); 
+        </span><span class="s0">final </span><span class="s1">String game = intent3.getStringExtra(</span><span class="s4">&quot;Game&quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String username1=intent3.getStringExtra(</span><span class="s4">&quot;username1&quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String group_name1 = intent3.getStringExtra(</span><span class="s4">&quot;group_name1&quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String winner_username=username1; 
+        </span><span class="s2">//final String[] New_Game = new String[1];</span><span class="s1"> 
+        Intended[</span><span class="s3">0</span><span class="s1">]=game; 
+        Intended[</span><span class="s3">1</span><span class="s1">]=group_name1; 
+        Intended[</span><span class="s3">2</span><span class="s1">]=username1; 
+        Intended[</span><span class="s3">3</span><span class="s1">]=winner_username; 
+ 
+        TextView user_info=(TextView) findViewById(R.id.intended_inv); 
+        user_info.setText(game+</span><span class="s4">&quot; &quot;</span><span class="s1">+username1+</span><span class="s4">&quot; &quot;</span><span class="s1">+group_name1+</span><span class="s4">&quot; &quot;</span><span class="s1">+winner_username); 
+ 
+ 
+        RandomBallData(); 
+        BingoNumbers(); 
+        RandomBallClass(); 
+        setupboard(); 
+ 
+        Loser(); 
+        Clouds(); 
+        PreviousNumbers(); 
+        Exit(); 
+ 
+    }</span><span class="s2">//closes onCreate</span><span class="s1"> 
+ 
+    </span><span class="s0">int </span><span class="s1">newRight2,newRight1,newRight3,newRight6, newRight4,newRight11; 
+    </span><span class="s0">int </span><span class="s1">newLeft2,newLeft1,newLeft3,newLeft6, newLeft4,newLeft11; 
+ 
+    </span><span class="s0">public void </span><span class="s1">Clouds(){ 
+        </span><span class="s0">int </span><span class="s1">delay = </span><span class="s3">0</span><span class="s1">; </span><span class="s2">// delay for half a second.</span><span class="s1"> 
+        </span><span class="s0">int </span><span class="s1">period1 = </span><span class="s3">40</span><span class="s1">; </span><span class="s2">// repeat every  sec.</span><span class="s1"> 
+        </span><span class="s0">final int </span><span class="s1">pix=</span><span class="s3">1</span><span class="s1">; 
+ 
+        Timer timer = </span><span class="s0">new </span><span class="s1">Timer(); 
+        timer.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+               View cloud6=findViewById(R.id.cloud_6); 
+ 
+                    ViewGroup.MarginLayoutParams mlp6 = (ViewGroup.MarginLayoutParams) cloud6.getLayoutParams(); 
+                    </span><span class="s0">int </span><span class="s1">right6=mlp6.rightMargin; 
+                    </span><span class="s0">int </span><span class="s1">left6=mlp6.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left6&gt;-</span><span class="s3">520</span><span class="s1">){ 
+                    newRight6=right6+pix; 
+                    newLeft6=left6-pix; 
+                    handler6.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_6=right6; 
+                    </span><span class="s0">int </span><span class="s1">left_6=(</span><span class="s0">int</span><span class="s1">)(</span><span class="s3">1350</span><span class="s1">); 
+                    newRight6=right_6-pix; 
+                    newLeft6=left_6+pix; 
+                    handler6.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                View cloud2=findViewById(R.id.cloud_2); 
+                ViewGroup.MarginLayoutParams mlp2 = (ViewGroup.MarginLayoutParams) cloud2.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right2 = mlp2.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left2 = mlp2.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left2&gt;-</span><span class="s3">520</span><span class="s1">) { 
+                    newRight2 = right2 + pix; 
+                    newLeft2 = left2 - pix; 
+                    handler2.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_2 = right2; 
+                    </span><span class="s0">int </span><span class="s1">left_2=(</span><span class="s0">int</span><span class="s1">)(</span><span class="s3">1350</span><span class="s1">); 
+                    newRight2 = right_2 - pix; 
+                    newLeft2 = left_2 + pix; 
+                    handler2.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+ 
+ 
+            } 
+        }, delay, period1); 
+ 
+        </span><span class="s0">int </span><span class="s1">period2 = </span><span class="s3">20</span><span class="s1">; </span><span class="s2">// repeat every  sec.</span><span class="s1"> 
+ 
+        Timer timer2 = </span><span class="s0">new </span><span class="s1">Timer(); 
+        timer2.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+                View cloud1=findViewById(R.id.cloud_1); 
+                ViewGroup.MarginLayoutParams mlp1 = (ViewGroup.MarginLayoutParams) cloud1.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right1=mlp1.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left1=mlp1.leftMargin; 
+                </span><span class="s0">if</span><span class="s1">(left1&gt;-</span><span class="s3">520</span><span class="s1">){ 
+                    newRight1=right1+pix; 
+                    newLeft1=left1-pix; 
+                    handler1.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_1 = right1; 
+                    </span><span class="s0">int </span><span class="s1">left_1 = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s3">1350</span><span class="s1">);; 
+                    newRight1 = right_1 - pix; 
+                    newLeft1 = left_1 + pix; 
+                    handler1.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                View cloud3=findViewById(R.id.cloud_3); 
+                ViewGroup.MarginLayoutParams mlp3 = (ViewGroup.MarginLayoutParams) cloud3.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right3=mlp3.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left3=mlp3.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left3&gt;-</span><span class="s3">520</span><span class="s1">){ 
+                    newRight3=right3+pix; 
+                    newLeft3=left3-pix; 
+                    handler3.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_3 = right3; 
+                    </span><span class="s0">int </span><span class="s1">left_3 = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s3">1350</span><span class="s1">);; 
+                    newRight3 = right_3 - pix; 
+                    newLeft3 = left_3 + pix; 
+                    handler3.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                View cloud4=findViewById(R.id.cloud_4); 
+                ViewGroup.MarginLayoutParams mlp4 = (ViewGroup.MarginLayoutParams) cloud4.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right4=mlp4.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left4=mlp4.leftMargin; 
+                </span><span class="s0">if</span><span class="s1">(left4&gt;-</span><span class="s3">520</span><span class="s1">){ 
+                    newRight4=right4+pix; 
+                    newLeft4=left4-pix; 
+                    handler4.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_4 = right4; 
+                    </span><span class="s0">int </span><span class="s1">left_4 = (</span><span class="s0">int</span><span class="s1">)(</span><span class="s3">1350</span><span class="s1">);; 
+                    newRight4 = right_4 - pix; 
+                    newLeft4 = left_4 + pix; 
+                    handler4.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+ 
+                } 
+ 
+            } 
+        }, delay, period2); 
+        </span><span class="s0">int </span><span class="s1">period3 =</span><span class="s3">75</span><span class="s1">; 
+        Timer timer3 = </span><span class="s0">new </span><span class="s1">Timer(); 
+        timer3.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+                View cloud11=findViewById(R.id.cloud_11); 
+ 
+                ViewGroup.MarginLayoutParams mlp11 = (ViewGroup.MarginLayoutParams) cloud11.getLayoutParams(); 
+                </span><span class="s0">int </span><span class="s1">right11=mlp11.rightMargin; 
+                </span><span class="s0">int </span><span class="s1">left11=mlp11.leftMargin; 
+                </span><span class="s0">if </span><span class="s1">(left11&gt;-</span><span class="s3">520</span><span class="s1">){ 
+                    newRight11=right11+pix; 
+                    newLeft11=left11-pix; 
+                    handler11.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+                </span><span class="s0">else </span><span class="s1">{ 
+                    </span><span class="s0">int </span><span class="s1">right_11=right11; 
+                    </span><span class="s0">int </span><span class="s1">left_11=(</span><span class="s0">int</span><span class="s1">)(</span><span class="s3">1350</span><span class="s1">); 
+                    newRight11=right_11-pix; 
+                    newLeft11=left_11+pix; 
+                    handler11.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                } 
+ 
+            } 
+        },</span><span class="s3">10</span><span class="s1">, period3); 
+    }</span><span class="s2">//close Clouds</span><span class="s1"> 
+ 
+ 
+ 
+    </span><span class="s2">//CREATE THE RANDOM BALL FUNCTION</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">RandomBallClass(){ 
+        </span><span class="s2">// THIS MAKES THE RANDOM BALL BUTTON</span><span class="s1"> 
+        </span><span class="s0">final </span><span class="s1">TextView RandomBalls=(TextView)findViewById(R.id.sun_bingo_ball_txt); 
+       </span><span class="s2">// final Button RandomBalls=(Button)findViewById(ball);</span><span class="s1"> 
+        RandomBalls.setText(</span><span class="s4">&quot;READY&quot;</span><span class="s1">); 
+    }</span><span class="s2">//close RandomBallClass()</span><span class="s1"> 
+ 
+    </span><span class="s2">//CHECK TO SEE IF RANDOM BALL DATA IS ALREAD IN THE DATABASE IF IT IS NOT THEN ADD IT.</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">RandomBallData(){ 
+        TextView user_info=(TextView) findViewById(R.id.intended_inv); 
+        String user= (String) user_info.getText(); 
+        String[] userinfo= user.split(</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+        String group_name=userinfo[</span><span class="s3">2</span><span class="s1">].toString(); 
+ 
+        Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                </span><span class="s0">try </span><span class="s1">{ 
+                    JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                    </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s4">&quot;success&quot;</span><span class="s1">); 
+ 
+                    </span><span class="s0">if </span><span class="s1">(success){ 
+                        String random_ball=jsonResponse.getString(</span><span class="s4">&quot;random_ball&quot;</span><span class="s1">); 
+                        String[] random_ball_array=random_ball.split(</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+                        </span><span class="s0">for </span><span class="s1">(String ball:random_ball_array) { 
+                            DatabaseBall.add(ball); 
+                        } 
+                       </span><span class="s2">// DatabaseBall.remove(0);</span><span class="s1"> 
+                        Bingo_Ball_Timer_Thread(); 
+ 
+                    }</span><span class="s2">//close if statement</span><span class="s1"> 
+                    </span><span class="s0">else</span><span class="s1">{ 
+                       InsertRandomBall(); 
+                    }</span><span class="s2">//close else statement</span><span class="s1"> 
+                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                    e.printStackTrace(); 
+                } 
+            } 
+        }; 
+ 
+        RandomBallExhists random_ball_exhists = </span><span class="s0">new </span><span class="s1">RandomBallExhists(group_name,response_listener); 
+        RequestQueue queue = Volley.newRequestQueue(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">); 
+        queue.add(random_ball_exhists); 
+    } 
+ 
+    </span><span class="s2">//CHECK TO SEE IF RANDOM BALL DATA IS NOT IN THE DATABASE IF IT IS NOT THEN ADD IT.</span><span class="s1"> 
+    </span><span class="s0">private void </span><span class="s1">InsertRandomBall(){ 
+       </span><span class="s2">// int Random_Bingo_Result=(int)Math.floor((Math.random()*100)+1);</span><span class="s1"> 
+       </span><span class="s2">// Ball.add(Random_Bingo_Result);</span><span class="s1"> 
+        </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">0</span><span class="s1">;i&lt;</span><span class="s3">100</span><span class="s1">;i++){ 
+            </span><span class="s0">int </span><span class="s1">New_Random_Bingo_Ball_Result = (</span><span class="s0">int</span><span class="s1">)Math.floor((Math.random()*</span><span class="s3">100</span><span class="s1">)+</span><span class="s3">1</span><span class="s1">); 
+            </span><span class="s0">while </span><span class="s1">(Ball.contains(New_Random_Bingo_Ball_Result)){ 
+                New_Random_Bingo_Ball_Result = (</span><span class="s0">int</span><span class="s1">)Math.floor((Math.random()*</span><span class="s3">100</span><span class="s1">)+</span><span class="s3">1</span><span class="s1">); 
+            }</span><span class="s2">//closes while loop</span><span class="s1"> 
+            Bingo_Main_Game.Ball.add(New_Random_Bingo_Ball_Result); 
+        } 
+ 
+        String message=Bingo_Main_Game.Ball.toString(); 
+        String message1=message.replace(</span><span class="s4">&quot;[&quot;</span><span class="s1">,</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String message2=message1.replace(</span><span class="s4">&quot;]&quot;</span><span class="s1">,</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+        </span><span class="s0">final </span><span class="s1">String random_ball=message2.replace(</span><span class="s4">&quot;,&quot;</span><span class="s1">,</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+        TextView user_info=(TextView) findViewById(R.id.intended_inv); 
+        String user= (String) user_info.getText(); 
+        String[] userinfo= user.split(</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+        String group_name=userinfo[</span><span class="s3">2</span><span class="s1">].toString(); 
+ 
+ 
+        Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+            @Override 
+            </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                </span><span class="s0">try </span><span class="s1">{ 
+                    JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                    </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s4">&quot;success&quot;</span><span class="s1">); 
+ 
+                    </span><span class="s0">if </span><span class="s1">(success){ 
+                        Ball.clear(); 
+                        RandomBallData(); 
+                    }</span><span class="s2">//close if statement</span><span class="s1"> 
+                    </span><span class="s0">else</span><span class="s1">{ 
+                        AlertDialog.Builder builder = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">); 
+                        builder.setMessage(</span><span class="s4">&quot;The Random Ball Database Failed to be Updated&quot;</span><span class="s1">) 
+                                .create() 
+                                .show(); 
+                    }</span><span class="s2">//close else statement</span><span class="s1"> 
+                } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                    e.printStackTrace(); 
+                } 
+            } 
+        };</span><span class="s2">// closes InsertRandomBall</span><span class="s1"> 
+ 
+        RandomBallSender random_ball_sender = </span><span class="s0">new </span><span class="s1">RandomBallSender(group_name,random_ball,response_listener); 
+        RequestQueue queue = Volley.newRequestQueue(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">); 
+        queue.add(random_ball_sender); 
+    } 
+ 
+    </span><span class="s2">//WHILE THE NEW RANDOM BINGO BALL NUMBER EQUALS AND EXHISTING BALL NUMBER PICK ANTHER RANDOM NUMBER</span><span class="s1"> 
+    </span><span class="s2">//THIS CREATES THE BINGO BALL ACTIONS/METHODS</span><span class="s1"> 
+    </span><span class="s2">//THIS IS THE BINGO SUN THREAD SO NUMBERS CHANGE</span><span class="s1"> 
+    Timer Sun_timer = </span><span class="s0">new </span><span class="s1">Timer(); 
+    String CurrentBall; 
+    </span><span class="s0">int </span><span class="s1">index=</span><span class="s3">0</span><span class="s1">; 
+    </span><span class="s0">public void </span><span class="s1">Bingo_Ball_Timer_Thread(){ 
+        </span><span class="s0">int </span><span class="s1">delaysun = </span><span class="s3">1000</span><span class="s1">; </span><span class="s2">// delay for 3 sec.</span><span class="s1"> 
+        </span><span class="s0">int </span><span class="s1">periodsun = </span><span class="s3">3000</span><span class="s1">; </span><span class="s2">// repeat every 6 sec.</span><span class="s1"> 
+ 
+        Sun_timer.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+        { 
+            </span><span class="s0">public void </span><span class="s1">run() 
+            { 
+                index++; 
+ 
+                runOnUiThread(</span><span class="s0">new </span><span class="s1">Runnable() </span><span class="s2">//run on ui threa</span><span class="s1"> 
+                { 
+                    </span><span class="s0">public void </span><span class="s1">run() 
+                    { 
+                        </span><span class="s0">if </span><span class="s1">(index % </span><span class="s3">2 </span><span class="s1">!=</span><span class="s3">0</span><span class="s1">){ 
+                            handler_sun.sendEmptyMessage(</span><span class="s3">0</span><span class="s1">); 
+                        } 
+ 
+                    } 
+                }); 
+           } 
+ 
+        }, delaysun, periodsun); 
+ 
+    }</span><span class="s2">//closes Bingo_Ball_Timer_Thread</span><span class="s1"> 
+ 
+    </span><span class="s2">//THIS IS JUST A CHECK THAT NUMBERS ON THE CARDS DON'T REPEAT</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">BingoNumbers(){ 
+ 
+        </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">num=</span><span class="s3">0</span><span class="s1">; num&lt;</span><span class="s3">25</span><span class="s1">; num++){ 
+            </span><span class="s0">int </span><span class="s1">Random_Bingo_Card_Number = (</span><span class="s0">int</span><span class="s1">)Math.floor((Math.random()*</span><span class="s3">100</span><span class="s1">)+</span><span class="s3">1</span><span class="s1">); 
+            String array= Arrays.toString(BingoCardArray); 
+ 
+            </span><span class="s2">//WHILE THE RANDOM NUMBER EQUALS AND EXHISTING CARD NUMBER REPEAT</span><span class="s1"> 
+            </span><span class="s0">while</span><span class="s1">(array.contains(Integer.toString(Random_Bingo_Card_Number))){ 
+                Random_Bingo_Card_Number = (</span><span class="s0">int</span><span class="s1">)Math.floor((Math.random()*</span><span class="s3">100</span><span class="s1">)+</span><span class="s3">1</span><span class="s1">); 
+            }</span><span class="s2">//closes while loop</span><span class="s1"> 
+ 
+            BingoCardArray[num] = Random_Bingo_Card_Number; 
+        }</span><span class="s2">//closes for loop</span><span class="s1"> 
+    }</span><span class="s2">//close BingoCardNumbers()</span><span class="s1"> 
+ 
+    </span><span class="s0">private void </span><span class="s1">setupboard() { 
+        </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">num=</span><span class="s3">1</span><span class="s1">; num&lt;=</span><span class="s3">25</span><span class="s1">; num++){ 
+ 
+            </span><span class="s0">int </span><span class="s1">nameID = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+num, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+            </span><span class="s0">final </span><span class="s1">Button boardbutton=(Button)findViewById(nameID); 
+            String Random_Bingo_Card = Integer.toString(BingoCardArray[num-</span><span class="s3">1</span><span class="s1">]); 
+ 
+            </span><span class="s0">if</span><span class="s1">(num==</span><span class="s3">13</span><span class="s1">){ 
+                boardbutton.setText(</span><span class="s4">&quot;Free&quot;</span><span class="s1">); 
+            } 
+            </span><span class="s0">else</span><span class="s1">{ 
+                </span><span class="s2">//set boardbutton text equal to a random number</span><span class="s1"> 
+                boardbutton.setText(Random_Bingo_Card); 
+            }</span><span class="s2">//closes else</span><span class="s1"> 
+        }</span><span class="s2">//closes for loop</span><span class="s1"> 
+ 
+    }</span><span class="s2">//closes setupboard() class</span><span class="s1"> 
+ 
+ 
+    </span><span class="s0">public void </span><span class="s1">Game(View view){ 
+ 
+        Button b = (Button)view; 
+        String buttonText = b.getText().toString(); 
+        </span><span class="s2">//Because buttonText can be a number(42) or &quot;X&quot; we use</span><span class="s1"> 
+        </span><span class="s2">// try/catch to catch the errors that happen when you convert &quot;X&quot; to an integer</span><span class="s1"> 
+        </span><span class="s2">//if numbers equal instead set red: ff0000</span><span class="s1"> 
+        </span><span class="s0">try</span><span class="s1">{ 
+            </span><span class="s0">int </span><span class="s1">button_number=Integer.parseInt(buttonText); 
+           </span><span class="s2">// int Random_Bingo_Ball=Integer.parseInt(CurrentBall);</span><span class="s1"> 
+            </span><span class="s0">if</span><span class="s1">(Ball.contains(button_number)){ 
+                </span><span class="s2">//if(button_number==button_number){</span><span class="s1"> 
+                view.setBackgroundResource(R.drawable.red_button); 
+                view.setTag(</span><span class="s3">1</span><span class="s1">); 
+                b.setTextColor(Color.parseColor(</span><span class="s4">&quot;#cce6ff&quot;</span><span class="s1">)); 
+ 
+            }</span><span class="s2">//close if</span><span class="s1"> 
+            </span><span class="s0">else</span><span class="s1">{ 
+                Toast.makeText( 
+                        Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">, 
+                        </span><span class="s4">&quot;Sorry Not A Match&quot;</span><span class="s1">, 
+                        Toast.LENGTH_LONG 
+                ).show(); 
+ 
+            }</span><span class="s2">//close else</span><span class="s1"> 
+        }</span><span class="s2">//close try</span><span class="s1"> 
+        </span><span class="s0">catch </span><span class="s1">(NumberFormatException e1){ 
+            Toast.makeText( 
+ 
+                    Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">, 
+                    </span><span class="s4">&quot;you got this&quot;</span><span class="s1">, 
+                    Toast.LENGTH_LONG 
+            ).show(); 
+ 
+        }</span><span class="s2">//close catch</span><span class="s1"> 
+ 
+        </span><span class="s0">if </span><span class="s1">(WIN_LOSE()==</span><span class="s0">true</span><span class="s1">){ 
+            </span><span class="s2">/** 
+             * SO Basically what i need to do: 
+             *  when Bingo_Main_Game.WIN_LOSE()==true 
+             *      Get the User_Name and Group_Name 
+             *      Send win to php document ...this will insert it into the GameStatus database table 
+             **/</span><span class="s1"> 
+ 
+            TextView user_info=(TextView) findViewById(R.id.intended_inv); 
+            String user= (String) user_info.getText(); 
+            String[] userinfo= user.split(</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+ 
+            String game=userinfo[</span><span class="s3">0</span><span class="s1">].toString(); 
+            String username=userinfo[</span><span class="s3">1</span><span class="s1">].toString(); 
+            String group_name=userinfo[</span><span class="s3">2</span><span class="s1">].toString(); 
+            String winner_username=userinfo[</span><span class="s3">3</span><span class="s1">].toString(); 
+ 
+            </span><span class="s0">final </span><span class="s1">String status=</span><span class="s4">&quot;win&quot;</span><span class="s1">; 
+ 
+            timer_loser.cancel();</span><span class="s2">//this cancels the thread that checks if the player has lost</span><span class="s1"> 
+            Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+                @Override 
+                </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                    </span><span class="s0">try </span><span class="s1">{ 
+                        JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                        </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s4">&quot;success&quot;</span><span class="s1">); 
+ 
+                        </span><span class="s0">if </span><span class="s1">(success){ 
+                            Sun_timer.cancel(); 
+                            </span><span class="s0">final </span><span class="s1">TextView ball_button=(TextView)findViewById(R.id.sun_bingo_ball_txt); 
+                            ball_button.setText(</span><span class="s4">&quot;YAY&quot;</span><span class="s1">); 
+                            WINNER_CLOUD(); 
+                            Toast.makeText( 
+                                    Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">, 
+                                    </span><span class="s4">&quot;Congratulations!!!!&quot;</span><span class="s1">, 
+                                    Toast.LENGTH_LONG 
+                            ).show(); 
+                            </span><span class="s0">final </span><span class="s1">TextView previous=(TextView) findViewById(R.id.cloud_bingo_numbers); 
+                            </span><span class="s0">final </span><span class="s1">TextView previoustext=(TextView) findViewById(R.id.bingo_numbers); 
+                            </span><span class="s0">if</span><span class="s1">(display_previous_number[</span><span class="s3">0</span><span class="s1">] ==</span><span class="s0">true</span><span class="s1">){ 
+                                previoustext.setVisibility(View.INVISIBLE); 
+                                previous.setText(</span><span class="s4">&quot;Previous Numbers&quot;</span><span class="s1">); 
+                                display_previous_number[</span><span class="s3">0</span><span class="s1">] =</span><span class="s0">false</span><span class="s1">; 
+                            } 
+                            Ball.clear(); 
+                            Intent registerIntent4=</span><span class="s0">new </span><span class="s1">Intent(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">,GroupPage.</span><span class="s0">class</span><span class="s1">); 
+                            startActivity(registerIntent4); 
+ 
+                        }</span><span class="s2">//close if statement</span><span class="s1"> 
+                        </span><span class="s0">else</span><span class="s1">{ 
+                            AlertDialog.Builder builder = </span><span class="s0">new </span><span class="s1">AlertDialog.Builder(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">); 
+                            builder.setMessage(</span><span class="s4">&quot;Win Status Failed to Update&quot;</span><span class="s1">) 
+                                    .create() 
+                                    .show(); 
+                        }</span><span class="s2">//close else statement</span><span class="s1"> 
+                    } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                        e.printStackTrace(); 
+                    } 
+                } 
+            }; 
+ 
+            Game_Won_Output WinUpdate = </span><span class="s0">new </span><span class="s1">Game_Won_Output(game,status,group_name,username,winner_username,response_listener); 
+            RequestQueue queue = Volley.newRequestQueue(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">); 
+            queue.add(WinUpdate); 
+ 
+        }</span><span class="s2">//close WIN_Lose if statement</span><span class="s1"> 
+ 
+    }</span><span class="s2">//close Game</span><span class="s1"> 
+    </span><span class="s0">public void </span><span class="s1">WINNER_CLOUD(){ 
+        </span><span class="s0">final </span><span class="s1">TextView cloud_win=(TextView) findViewById(R.id.cloud_win); 
+                    cloud_win.setVisibility(View.VISIBLE); 
+ 
+    } 
+    </span><span class="s2">//NOW FOR THE RULES</span><span class="s1"> 
+    </span><span class="s0">public boolean </span><span class="s1">WIN_LOSE (){ 
+ 
+        Button button1=(Button)findViewById(R.id.button1); 
+        Button button2=(Button)findViewById(R.id.button2); 
+        Button button3=(Button)findViewById(R.id.button3); 
+        Button button4=(Button)findViewById(R.id.button4); 
+        Button button5=(Button)findViewById(R.id.button5); 
+        Button button6=(Button)findViewById(R.id.button6); 
+        Button button7=(Button)findViewById(R.id.button7); 
+        Button button8=(Button)findViewById(R.id.button8); 
+        Button button9=(Button)findViewById(R.id.button9); 
+        Button button10=(Button)findViewById(R.id.button10); 
+        Button button11=(Button)findViewById(R.id.button11); 
+        Button button12=(Button)findViewById(R.id.button12); 
+        Button button13=(Button)findViewById(R.id.button13); 
+        Button button14=(Button)findViewById(R.id.button14); 
+        Button button15=(Button)findViewById(R.id.button15); 
+        Button button16=(Button)findViewById(R.id.button16); 
+        Button button17=(Button)findViewById(R.id.button17); 
+        Button button18=(Button)findViewById(R.id.button18); 
+        Button button19=(Button)findViewById(R.id.button19); 
+        Button button20=(Button)findViewById(R.id.button20); 
+        Button button21=(Button)findViewById(R.id.button21); 
+        Button button22=(Button)findViewById(R.id.button22); 
+        Button button23=(Button)findViewById(R.id.button23); 
+        Button button24=(Button)findViewById(R.id.button24); 
+        Button button25=(Button)findViewById(R.id.button25); 
+ 
+        </span><span class="s2">//THIS CHECKS FOR DIAGONAL WIN</span><span class="s1"> 
+       </span><span class="s0">boolean </span><span class="s1">diag0=(String.valueOf(button1.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+               &amp;&amp;(String.valueOf(button7.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+               &amp;&amp;(button13.getText()==</span><span class="s4">&quot;Free&quot;</span><span class="s1">) 
+               &amp;&amp;(String.valueOf(button19.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+               &amp;&amp;(String.valueOf(button25.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">diag1=(String.valueOf(button5.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button9.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(button13.getText()==</span><span class="s4">&quot;Free&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button17.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button21.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+ 
+        </span><span class="s2">//LEFT-&gt;RIGHT DIAGONAL</span><span class="s1"> 
+        </span><span class="s0">if </span><span class="s1">(diag0){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            button13.setTextColor(Color.parseColor(</span><span class="s4">&quot;#cce6ff&quot;</span><span class="s1">)); 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j+=</span><span class="s3">6</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+              </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes IF condition</span><span class="s1"> 
+ 
+        </span><span class="s2">//RIGHT-&gt;LEFT DIAGONAL</span><span class="s1"> 
+        </span><span class="s0">if </span><span class="s1">(diag1){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">5</span><span class="s1">;j&lt;=</span><span class="s3">21</span><span class="s1">;j+=</span><span class="s3">4</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes IF condition</span><span class="s1"> 
+ 
+        </span><span class="s2">//THIS CHECKS FOR A LEFT/RIGHT WIN &lt;--&gt;</span><span class="s1"> 
+ 
+        </span><span class="s0">boolean </span><span class="s1">row0=(String.valueOf(button1.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button2.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button3.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button4.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button5.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">row1=(String.valueOf(button6.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button7.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button8.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button9.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button10.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">row2=(String.valueOf(button11.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button12.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button13.getText())==</span><span class="s4">&quot;Free&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button14.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button15.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">row3=(String.valueOf(button16.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button17.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button18.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button19.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button20.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">row4=(String.valueOf(button21.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button22.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button23.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button24.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button25.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+ 
+        </span><span class="s0">if</span><span class="s1">(row0){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">5</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(row1){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">6</span><span class="s1">;j&lt;=</span><span class="s3">10</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(row2){ 
+            button13.setTextColor(Color.parseColor(</span><span class="s4">&quot;#cce6ff&quot;</span><span class="s1">)); 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">11</span><span class="s1">;j&lt;=</span><span class="s3">15</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(row3){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">16</span><span class="s1">;j&lt;=</span><span class="s3">20</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(row4){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">21</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+ 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+        </span><span class="s2">//THIS CHECKS FOR A UP/DOWN WIN ^^^</span><span class="s1"> 
+        </span><span class="s0">boolean </span><span class="s1">col0=(String.valueOf(button1.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button6.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button11.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button16.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button21.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">col1=(String.valueOf(button2.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button7.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button12.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button17.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button22.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">col2=(String.valueOf(button3.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button8.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button13.getText())==</span><span class="s4">&quot;Free&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button18.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button23.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">col3=(String.valueOf(button4.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button9.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button14.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button19.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button24.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">boolean </span><span class="s1">col4=(String.valueOf(button5.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button10.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button15.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button20.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">) 
+                &amp;&amp;(String.valueOf(button25.getTag())==</span><span class="s4">&quot;1&quot;</span><span class="s1">); 
+        </span><span class="s0">if</span><span class="s1">(col0){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">1</span><span class="s1">;i&lt;=</span><span class="s3">21</span><span class="s1">;i+=</span><span class="s3">5</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+i, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(col1){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">2</span><span class="s1">;i&lt;=</span><span class="s3">22</span><span class="s1">;i+=</span><span class="s3">5</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+i, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(col2){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            button13.setTextColor(Color.parseColor(</span><span class="s4">&quot;#cce6ff&quot;</span><span class="s1">)); 
+            </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">3</span><span class="s1">;i&lt;=</span><span class="s3">23</span><span class="s1">;i+=</span><span class="s3">5</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+i, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(col3){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">4</span><span class="s1">;i&lt;=</span><span class="s3">24</span><span class="s1">;i+=</span><span class="s3">5</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+i, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+ 
+        </span><span class="s0">if</span><span class="s1">(col4){ 
+            </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                </span><span class="s2">//  button_id.setBackgroundColor(Color.BLUE);</span><span class="s1"> 
+                button_id.setBackgroundResource(R.drawable.button_board); 
+            } 
+            </span><span class="s0">for</span><span class="s1">(</span><span class="s0">int </span><span class="s1">i=</span><span class="s3">5</span><span class="s1">;i&lt;=</span><span class="s3">25</span><span class="s1">;i+=</span><span class="s3">5</span><span class="s1">){ 
+                </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+i, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                Button button_id=(Button)findViewById(buttonid); 
+                button_id.setBackgroundResource(R.drawable.button_win_board); 
+                button_id.setTextColor(Color.WHITE); 
+            } 
+            </span><span class="s0">return true</span><span class="s1">; 
+        }</span><span class="s2">//closes if condition</span><span class="s1"> 
+        </span><span class="s0">else</span><span class="s1">{ 
+            </span><span class="s0">return false</span><span class="s1">; 
+        } 
+    }</span><span class="s2">//closes win</span><span class="s1"> 
+</span><span class="s0">public void </span><span class="s1">Exit(){ 
+    </span><span class="s0">final </span><span class="s1">TextView exit_cloud=(TextView) findViewById(R.id.cloud_exit); 
+    </span><span class="s0">final </span><span class="s1">TextView cloud_exit_lost = (TextView) findViewById(R.id.cloud_exit_lost); 
+ 
+    </span><span class="s2">//when register here is clicked</span><span class="s1"> 
+    exit_cloud.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){ 
+        @Override 
+        </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+            Sun_timer.cancel(); 
+            Ball.clear(); 
+            BingoCardArray=</span><span class="s0">null</span><span class="s1">; 
+ 
+            Intent registerIntent1=</span><span class="s0">new </span><span class="s1">Intent(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">,Bingo_Main_Login.</span><span class="s0">class</span><span class="s1">); 
+            startActivity(registerIntent1); 
+ 
+        } 
+    }); 
+    cloud_exit_lost.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener(){ 
+        @Override 
+        </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+            Sun_timer.cancel(); 
+            Ball.clear(); 
+            BingoCardArray=</span><span class="s0">null</span><span class="s1">; 
+ 
+            Intent registerIntent2=</span><span class="s0">new </span><span class="s1">Intent(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">,Bingo_Main_Login.</span><span class="s0">class</span><span class="s1">); 
+            startActivity(registerIntent2); 
+        } 
+    }); 
+} 
+    </span><span class="s0">public void </span><span class="s1">PreviousNumbers(){ 
+        </span><span class="s0">final </span><span class="s1">TextView previous=(TextView) findViewById(R.id.cloud_bingo_numbers); 
+        </span><span class="s0">final </span><span class="s1">TextView previoustext=(TextView) findViewById(R.id.bingo_numbers); 
+ 
+        previous.setOnClickListener(</span><span class="s0">new </span><span class="s1">View.OnClickListener() { 
+            </span><span class="s0">public void </span><span class="s1">onClick(View view) { 
+                </span><span class="s0">if </span><span class="s1">(display_previous_number[</span><span class="s3">0</span><span class="s1">] ==</span><span class="s0">false</span><span class="s1">){ 
+                    previoustext.setVisibility(View.VISIBLE); 
+                    previous.setText(</span><span class="s4">&quot;Hide Numbers&quot;</span><span class="s1">); 
+                    display_previous_number[</span><span class="s3">0</span><span class="s1">] =</span><span class="s0">true</span><span class="s1">; 
+                } 
+                </span><span class="s0">else</span><span class="s1">{ 
+                    previoustext.setVisibility(View.INVISIBLE); 
+                    previous.setText(</span><span class="s4">&quot;Previous Numbers&quot;</span><span class="s1">); 
+                    display_previous_number[</span><span class="s3">0</span><span class="s1">] =</span><span class="s0">false</span><span class="s1">; 
+                } 
+ 
+            } 
+        }); 
+ 
+    } 
+    Timer timer_loser = </span><span class="s0">new </span><span class="s1">Timer(); 
+ 
+    </span><span class="s0">public void </span><span class="s1">Loser(){ 
+        </span><span class="s2">/** 
+         * So Basically what i need to do: 
+         *   create a thread which continusouly asks the database if any user in a certain group has won 
+         *   if the search returns &quot;win&quot; 
+         *   player looses 
+         **/</span><span class="s1"> 
+        </span><span class="s2">//Threads to consistently check win/lose all the time.</span><span class="s1"> 
+            </span><span class="s0">int </span><span class="s1">delay = </span><span class="s3">3000</span><span class="s1">; </span><span class="s2">// delay for 3 sec.</span><span class="s1"> 
+            </span><span class="s0">int </span><span class="s1">period = </span><span class="s3">1000</span><span class="s1">; </span><span class="s2">// repeat every 6 sec.</span><span class="s1"> 
+ 
+            </span><span class="s2">// Timer timer = new Timer();</span><span class="s1"> 
+            timer_loser.scheduleAtFixedRate(</span><span class="s0">new </span><span class="s1">TimerTask() 
+            { 
+                </span><span class="s0">public void </span><span class="s1">run() 
+                { 
+                    TextView user_info=(TextView) findViewById(R.id.intended_inv); 
+                    String user= (String) user_info.getText(); 
+                    String[] userinfo= user.split(</span><span class="s4">&quot; &quot;</span><span class="s1">); 
+ 
+                    String group_name=userinfo[</span><span class="s3">2</span><span class="s1">].toString(); 
+ 
+                    Response.Listener&lt;String&gt; response_listener= </span><span class="s0">new </span><span class="s1">Response.Listener&lt;String&gt;() { 
+                        @Override 
+                        </span><span class="s0">public void </span><span class="s1">onResponse(String response) { 
+                            </span><span class="s0">try </span><span class="s1">{ 
+                                JSONObject jsonResponse= </span><span class="s0">new </span><span class="s1">JSONObject(response); 
+                                </span><span class="s0">boolean </span><span class="s1">success = jsonResponse.getBoolean(</span><span class="s4">&quot;success&quot;</span><span class="s1">); 
+ 
+                                </span><span class="s0">if </span><span class="s1">(success){ 
+                                    </span><span class="s2">//clears the ball array</span><span class="s1"> 
+                                    Ball.clear(); 
+                                    </span><span class="s2">//stops the Sun Ball timer</span><span class="s1"> 
+                                    Sun_timer.cancel(); 
+                                    </span><span class="s2">//sets the background color dark blue</span><span class="s1"> 
+                                    RelativeLayout sky=(RelativeLayout)findViewById(R.id.activity_bingo__main); 
+                                    sky.setBackgroundColor(Color.parseColor(</span><span class="s4">&quot;#2a4d6f&quot;</span><span class="s1">)); 
+ 
+                                    </span><span class="s2">//sets the loser cloud and sheen to visible</span><span class="s1"> 
+                                    </span><span class="s0">final </span><span class="s1">TextView cloud_lost=(TextView) findViewById(R.id.cloud_lost); 
+                                    cloud_lost.setVisibility(View.VISIBLE); 
+                                    </span><span class="s0">final </span><span class="s1">LinearLayout sheen_lost=(LinearLayout) findViewById(R.id.lost_sheen); 
+                                    sheen_lost.setVisibility(View.VISIBLE); 
+                                    </span><span class="s0">final </span><span class="s1">TextView cloud_exit= (TextView)findViewById(R.id.cloud_exit); 
+                                    cloud_exit.setVisibility(View.INVISIBLE); 
+                                    </span><span class="s0">final </span><span class="s1">TextView cloud_exit_lost=(TextView) findViewById(R.id.cloud_exit_lost); 
+                                    cloud_exit_lost.setVisibility(View.VISIBLE); 
+ 
+ 
+                                    </span><span class="s2">//darkens all of the button</span><span class="s1"> 
+                                    </span><span class="s0">for </span><span class="s1">(</span><span class="s0">int </span><span class="s1">j=</span><span class="s3">1</span><span class="s1">;j&lt;=</span><span class="s3">25</span><span class="s1">;j++){ 
+                                        </span><span class="s0">int </span><span class="s1">buttonid = getResources().getIdentifier(</span><span class="s4">&quot;button&quot;</span><span class="s1">+j, </span><span class="s4">&quot;id&quot;</span><span class="s1">, getPackageName()); 
+                                        Button button_id=(Button)findViewById(buttonid); 
+                                        button_id.setTextColor(Color.LTGRAY); 
+                                        button_id.setBackgroundResource(R.drawable.button_lost); 
+                                    } 
+ 
+                                    timer_loser.cancel(); 
+                                }</span><span class="s2">//close if statement</span><span class="s1"> 
+ 
+                            } </span><span class="s0">catch </span><span class="s1">(JSONException e) { 
+                                e.printStackTrace(); 
+                            } 
+                        } 
+                    }; 
+ 
+                    Game_Lost_Output gamelostoutput= </span><span class="s0">new </span><span class="s1">Game_Lost_Output(group_name, response_listener); 
+                    RequestQueue queue = Volley.newRequestQueue(Bingo_Main_Game.</span><span class="s0">this</span><span class="s1">); 
+                    queue.add(gamelostoutput); 
+ 
+                } 
+            }, delay, period); 
+ 
+        }</span><span class="s2">//close Loser();</span><span class="s1"> 
+ 
+ 
+}</span><span class="s2">//closes Bingo_Main class</span><span class="s1"> 
+</span></pre>
+</body>
+</html>
